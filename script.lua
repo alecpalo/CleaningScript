@@ -13,32 +13,6 @@
 --
 --]]--
 
-Dest = ""
-
-if #arg == 1 then
-  -- if no command line args are specified, clean desktop
-  ClearDesktop()
-elseif #arg > 1 then
-  -- if there are more than one argument specified, do all of them
-  -- I want this to be able to clear downloads
-  -- First check if command line arguments are good
-  local valid = CheckCLI()
-  if ~valid then
-    print("malformed arguments")
-    os.exit()
-  end
-
-  -- enact all commands
-  for index = 0, #arg do
-    if arg[index] == "downloads" then
-
-    elseif arg[index] == "desktop" then
-
-    end
-  end
-
-end
-
 local function GetFileNames()
   local i, t, popen = 0, {}, io.popen
   local op = "cd ~/" .. Dest
@@ -93,17 +67,41 @@ function ClearDownloads()
   Dest = "Downloads"
   local files = GetFileNames()
   for _, file in ipairs(files) do
-    local op = "cd ~/Downloads && mv " .. file .. " ~/.Trash"
+    local op = "cd ~/Downloads && mv '" .. file .. "' ~/.Trash"
     os.execute(op)
   end
 end
 
 function CheckCLI()
-  for i = 0, #arg do
-    print("test")
-    if arg[i] ~= "desktop" or arg[i] ~= "downloads" then
+  for i = 1, #arg do
+    print(arg[i])
+    if arg[i] ~= "desktop" and arg[i] ~= "downloads" then
       return false
     end
   end
   return true
+end
+
+Dest = ""
+if #arg == 0 then
+  -- if no command line args are specified, clean desktop
+  ClearDesktop()
+elseif #arg > 0 then
+  -- if there are more than one argument specified, do all of them
+  -- I want this to be able to clear downloads
+  -- First check if command line arguments are good
+  local valid = CheckCLI()
+  if valid == false then
+    print("malformed arguments")
+    os.exit()
+  end
+
+  -- enact all commands
+  for index = 0, #arg do
+    if arg[index] == "downloads" then
+      ClearDownloads()
+    elseif arg[index] == "desktop" then
+      ClearDesktop()
+    end
+  end
 end
