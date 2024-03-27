@@ -27,9 +27,17 @@ local function GetFileNames()
 end
 
 local function GetFileType(file)
-  local index, _ = string.find(file, "%.")
+  local index = 0
+  for i = #file, 0, -1 do
+    local c = file:sub(i, i)
+    if c == '.' then
+      index = i
+      break
+    end
+  end
+  print(index)
   type = nil
-  if index ~= nil then
+  if index ~= 0 then
     type = string.sub(file, index + 1, -1)
   end
   return type
