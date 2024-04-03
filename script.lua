@@ -26,8 +26,19 @@ local function GetFileNames()
   return t
 end
 
+local function isDotFile(file)
+  if file.sub(0, 0) == '.' then
+    return true
+  end
+  return false
+end
+
 local function GetFileType(file)
   local index = 0
+  type = nil
+  if isDotFile(file) then
+    return type
+  end
   for i = #file, 0, -1 do
     local c = file:sub(i, i)
     if c == '.' then
@@ -35,8 +46,6 @@ local function GetFileType(file)
       break
     end
   end
-  print(index)
-  type = nil
   if index ~= 0 then
     type = string.sub(file, index + 1, -1)
   end
@@ -66,7 +75,7 @@ function ClearDesktop()
 
     if type ~= nil then
       print(op)
-      os.execute(op)
+      -- os.execute(op)
     end
   end
 end
